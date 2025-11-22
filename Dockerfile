@@ -91,16 +91,21 @@ RUN cd /tmp/node-v${NODE_VERSION} && \
     find out -name "*.so*" -type f && \
     ls -la out/Release/
 
-# Copy and strip libnode.so to output directory
+# Copy libnode.so and headers to output directory
 RUN cd /tmp/node-v${NODE_VERSION} && \
-    mkdir -p /output && \
-    find out -name "libnode.so" -type f -exec cp {} /output/ \; && \
+    mkdir -p /output/lib /output/include/node && \
+    find out -name "libnode.so" -type f -exec cp {} /output/lib/ \; && \
+    cp -r src /output/include/node/ && \
+    cp -r deps/v8/include /output/include/node/v8 && \
+    cp -r deps/uv/include /output/include/node/uv && \
     echo "=== Before strip ===" && \
-    ls -lh /output/ && \
-    ${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip /output/libnode.so && \
+    ls -lh /output/lib/ && \
+    ${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip /output/lib/libnode.so && \
     echo "=== After strip ===" && \
-    ls -lh /output/ && \
-    test -f /output/libnode.so || (echo "ERROR: libnode.so not found!" && exit 1)
+    ls -lh /output/lib/ && \
+    echo "=== Headers ===" && \
+    ls -la /output/include/node/ | head -20 && \
+    test -f /output/lib/libnode.so || (echo "ERROR: libnode.so not found!" && exit 1)
 
 # Cleanup
 RUN rm -rf /tmp/node-v${NODE_VERSION}

@@ -58,15 +58,17 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo 正在从容器中导出 libnode.so...
-docker run --rm -v %cd%:/workspace node18-build:latest bash -c "cp /output/libnode.so* /workspace/"
+echo 正在从容器中导出 libnode.so 和头文件...
+docker run --rm -v %cd%:/workspace node18-build:latest bash -c "cp /output/lib/libnode.so /workspace/ && cp -r /output/include /workspace/"
 
 if %errorlevel% equ 0 (
     echo.
     echo ========================================
-    echo libnode.so 已成功导出到当前目录
+    echo libnode.so 和头文件已成功导出到当前目录
     echo ========================================
-    dir libnode.so* 2>nul
+    dir libnode.so 2>nul
+    echo.
+    echo 头文件位置: include\node\
 ) else (
     echo 导出失败，请检查错误信息
     exit /b 1
