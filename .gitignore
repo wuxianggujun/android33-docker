@@ -1,0 +1,32 @@
+# Android build directories
+androidnodejsembed/build/
+androidnodejsembed/app/build/
+androidnodejsembed/.gradle/
+androidnodejsembed/.idea/
+androidnodejsembed/.cxx/
+androidnodejsembed/app/.cxx/
+androidnodejsembed/local.properties
+androidnodejsembed/.kotlin/
+
+# Gradle
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Node
+node_modules/
+
+# IDE
+.vscode/
+.idea/
