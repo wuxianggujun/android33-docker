@@ -1,6 +1,25 @@
 # Node.js Android Cross-Compilation Builder
 
+> **献给我的好友影子** 🎉  
+> 于 2025年11月23日，历经一天的编译调试，成功完成 Node.js 在 Android 平台的交叉编译。
+
 This Docker image cross-compiles Node.js from source for Android (ARM64) with the `--shared` flag, generating `libnode.so` for embedding in Android applications.
+
+## 项目简介 | Project Overview
+
+本项目提供了一个完整的 Docker 构建环境，用于将 Node.js 交叉编译到 Android 平台。经过测试，**Node.js v20.11.0** 可以成功编译并在 Android 33 (API Level 33) 上正常运行。
+
+**主要特性：**
+- ✅ 已测试并验证：Node.js v20.11.0 在 Android ARM64 平台正常工作
+- ✅ 生成优化的 libnode.so 共享库（约 54 MB）
+- ✅ 包含完整的 Android 示例项目（`androidnodejsembed` 目录）
+- ✅ 支持在 Android 应用中嵌入和运行 JavaScript 代码
+
+**Key Features:**
+- ✅ Tested and verified: Node.js v20.11.0 works on Android ARM64
+- ✅ Generates optimized libnode.so shared library (~54 MB)
+- ✅ Includes complete Android example project (`androidnodejsembed` directory)
+- ✅ Supports embedding and running JavaScript in Android apps
 
 ## What's Included
 
@@ -88,24 +107,43 @@ docker run --rm -v ${PWD}:/workspace node18-build:latest \
 - **API Level**: 33
 - **Node.js Version**: 20.11.0
 
-## Usage in Android
+## 在 Android 中使用 | Usage in Android
 
-### 1. Place in your Android project
+### 完整示例项目 | Complete Example
+
+本仓库包含一个完整的 Android 示例项目，位于 `androidnodejsembed` 目录：
+
+```bash
+# 打开 Android Studio 并导入项目
+cd androidnodejsembed
+# 或直接用 Android Studio 打开 androidnodejsembed 目录
+```
+
+**示例项目包含：**
+- ✅ 预编译的 libnode.so（已放置在 `app/src/main/jniLibs/arm64-v8a/`）
+- ✅ JNI 接口实现
+- ✅ Kotlin/Java 调用示例
+- ✅ 完整的构建配置
+
+### 手动集成步骤 | Manual Integration
+
+### 1. 放置库文件到 Android 项目
 ```
 app/src/main/jniLibs/arm64-v8a/libnode.so
 ```
 
-### 2. Load in C++ via JNI
+### 2. 通过 JNI 在 C++ 中加载
 ```cpp
 #include <node.h>
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_example_MyApp_runJS(JNIEnv* env, jobject, jstring jsCode) {
+    // 初始化并运行 JavaScript
     // Initialize and run JavaScript
 }
 ```
 
-### 3. Call from Kotlin/Java
+### 3. 从 Kotlin/Java 调用
 ```kotlin
 class MyApp {
     external fun runJS(code: String)
@@ -116,6 +154,13 @@ class MyApp {
         }
     }
 }
+```
+
+### 运行示例 | Run Example
+```kotlin
+// 在 Android 应用中运行 JavaScript
+val app = MyApp()
+app.runJS("console.log('Hello from Node.js on Android!')")
 ```
 
 ## Size Reduction Tips
